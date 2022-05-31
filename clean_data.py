@@ -1,16 +1,21 @@
 import json
 import re
+import os
 
 def parse_text(data):
-	text = data['content'].replace("\n", " ").replace("\t", " ")
-	data_list = re.split('[\n,:]', text)
-	data_list = [re.sub('[^A-Za-z0-9+# ]+', '', data).strip() \
-						for data in data_list if data != '']
-	data['content'] = ' '.join(x for x in data_list)
+	data['content'].replace("\n", " ").replace("\t", " ")
+	#data_list = re.split('[\n,:]', text)
+	#data_list = [re.sub('[^A-Za-z0-9+# ]+', '', data).strip() \
+	#					for data in data_list if data != '']
+	#data['content'] = ' '.join(x for x in data_list)
 
 def clean_data(Data_File_Path):
 	try:
-		clean_data_writer = open("clean_data/clean_data.json", 'a')
+		clean_data_file = "clean_data/clean_data.json"
+		if os.path.isfile(clean_data_file):
+			os.remove(clean_data_file)
+
+		clean_data_writer = open(clean_data_file, 'a')
 		with open(Data_File_Path, 'r') as f:
 			for line in f.readlines():
 				data = json.loads(line)
