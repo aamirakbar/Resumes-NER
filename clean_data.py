@@ -6,33 +6,25 @@ def parse_text(data):
 	data_list = re.split('[\n,:]', text)
 	data_list = [re.sub('[^A-Za-z0-9+# ]+', '', data).strip() \
 						for data in data_list if data != '']
-	data = ' '.join(x for x in data_list)
-	return data
+	data['content'] = ' '.join(x for x in data_list)
 
 def clean_data(Data_File_Path):
 	try:
-		clean_data = []
-		lines=[]
+		clean_data_writer = open("clean_data/clean_data.json", 'a')
 		with open(Data_File_Path, 'r') as f:
-			lines = f.readlines()
-			for line in lines:
+			for line in f.readlines():
 				data = json.loads(line)
-				text = parse_text(data)
-				entities = []
-				for annotation in data['annotation']:
-					point = annotation['points'][0]
-					labels = annotation['label']
-					if not isinstance(labels, list):
-						labels = [labels]
-					for label in labels:
-						entities.append((point['start'], point['end'] + 1 ,label))
-				clean_data.append((text, {"entities" : entities}))
-		
-		return clean_data
+				parse_text(data)
+				json.dump(data, clean_data_writer)
+				clean_data_writer.write("\n")
+
+		clean_data_writer.close()
+		return True
 
 	except Exception as e:
 		print(e)
-		return None
+		return False
 
-data = clean_data("dataset/Entity_Recognition_in_Resumes.json")
-print(len(data))
+if clean_data("dataset/Entity_Recognition_in_Resumes.json"):
+	print("Data Cleaning successful")
+	print("Clean Data stored in clean_data/clean_data.json")
