@@ -24,8 +24,8 @@ pip3 install spacy
 
 2. This will save the NER model in current directory location
 
-# Score Resume
+# Score Resumes
 
 1. Open jupyter notebook: score_resumes.ipynb
 
-2. Run notebook: you will see a table at the end
+2. Run the notebook: you will see a table at the end
