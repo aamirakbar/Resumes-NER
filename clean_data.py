@@ -18,11 +18,21 @@ def clean_data(Data_File_Path):
 			for line in lines:
 				data = json.loads(line)
 				text = parse_text(data)
-				print(type(text))
-				break
+				entities = []
+				for annotation in data['annotation']:
+					point = annotation['points'][0]
+					labels = annotation['label']
+					if not isinstance(labels, list):
+						labels = [labels]
+					for label in labels:
+						entities.append((point['start'], point['end'] + 1 ,label))
+				clean_data.append((text, {"entities" : entities}))
+		
+		return clean_data
 
 	except Exception as e:
 		print(e)
-        #return None
+		return None
 
-clean_data("dataset/Entity_Recognition_in_Resumes.json")
+data = clean_data("dataset/Entity_Recognition_in_Resumes.json")
+print(len(data))
